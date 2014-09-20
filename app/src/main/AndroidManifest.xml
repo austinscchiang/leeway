@@ -34,6 +34,11 @@
             android:name="com.ac.austin.now.PickHackathons"
             android:label="Hackathons">
         </activity>
+
+        <activity
+            android:name="com.ac.austin.now.PickDinners"
+            android:label="Places to Eat">
+        </activity>
     </application>
 
 </manifest>

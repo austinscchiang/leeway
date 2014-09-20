@@ -1,4 +1,4 @@
-package yelp;
+package com.ac.austin.now;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -30,7 +30,7 @@ public class YelpAPI {
   private static final String API_HOST = "api.yelp.com";
   private static final String DEFAULT_TERM = "dinner";
   private static final String DEFAULT_LOCATION = "San Francisco, CA";
-  private static final int SEARCH_LIMIT = 3;
+  private static final int SEARCH_LIMIT = 20;
   private static final String SEARCH_PATH = "/v2/search";
   private static final String BUSINESS_PATH = "/v2/business";
 
@@ -94,7 +94,7 @@ public class YelpAPI {
   }
 
   /**
-   * Creates and returns an {@link OAuthRequest} based on the API endpoint specified.
+   * Creates and returns an {@link org.scribe.model.OAuthRequest} based on the API endpoint specified.
    * 
    * @param path API endpoint to be queried
    * @return <tt>OAuthRequest</tt>
@@ -105,9 +105,9 @@ public class YelpAPI {
   }
 
   /**
-   * Sends an {@link OAuthRequest} and returns the {@link Response} body.
+   * Sends an {@link org.scribe.model.OAuthRequest} and returns the {@link org.scribe.model.Response} body.
    * 
-   * @param request {@link OAuthRequest} corresponding to the API request
+   * @param request {@link org.scribe.model.OAuthRequest} corresponding to the API request
    * @return <tt>String</tt> body of API response
    */
   private String sendRequestAndGetResponse(OAuthRequest request) {
