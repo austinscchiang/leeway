@@ -44,23 +44,29 @@ public class MainActivity extends Activity
                 Intent intent;
                 switch (position){
 //                    // movies
-//                    case 0:
-//                        intent = new Intent(getApplicationContext(), PickMovies.class);
-//                    // concerts
-//                    case 0:
+                    case 0:
+                        intent = new Intent(getApplicationContext(), PickMovies.class);
+                        break;
+                    default:
+                        intent = new Intent();
+                        break;
+                    // concerts
+//                    case 1:
 //                        intent = new Intent(getApplicationContext(), PickMovies.class);
 //                    // dining
-//                    case 0:
+//                    case 2:
 //                        intent = new Intent(getApplicationContext(), PickMovies.class);
 //                    // hackathons
-//                    case 0:
+//                    case 3:
 //                        intent = new Intent(getApplicationContext(), PickMovies.class);
 //                    // sporting event
-//                    case 0:
+//                    case 4:
 //                        intent = new Intent(getApplicationContext(), PickMovies.class);
 
 
                 }
+
+                startActivity(intent);
             }
         });
 
