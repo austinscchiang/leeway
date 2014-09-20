@@ -12,6 +12,8 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import org.w3c.dom.Text;
+
 import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
@@ -44,11 +46,15 @@ public class UserEventListAdapter extends ArrayAdapter {
             v = _inflater.inflate(_layout, parent, false);
         }
         TextView eventTitleView = (TextView)v.findViewById(R.id.event_title);
-        TextView eventLocationView = (TextView)v.findViewById(R.id.event_location);
+        TextView eventPrimaryView = (TextView)v.findViewById(R.id.event_primary);
+        TextView eventSecondaryView = (TextView)v.findViewById(R.id.event_secondary);
         ImageView eventThumbnailView = (ImageView)v.findViewById(R.id.event_thumbnail);
 
         eventTitleView.setText(event._name);
-        eventLocationView.setText(event._subtitle);
+        eventPrimaryView.setText(event._primary);
+        if(event._secondary != null && !event._secondary.equals("")){
+            eventSecondaryView.setText(event._secondary);
+        }
         new LoadImageTask(eventThumbnailView)
                 .execute(event._imageUrl);
         return v;
@@ -70,7 +76,7 @@ public class UserEventListAdapter extends ArrayAdapter {
                 InputStream in = new java.net.URL(urldisplay).openStream();
                 mIcon11 = BitmapFactory.decodeStream(in);
             } catch (Exception e) {
-                Log.e("Error", e.getMessage());
+//                Log.e("Error", e.getMessage());
                 e.printStackTrace();
             }
             return mIcon11;

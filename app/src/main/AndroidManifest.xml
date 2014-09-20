@@ -14,7 +14,7 @@
         android:theme="@style/CustomActionBarTheme" >
 
         <activity
-            android:name=".FriendsEventsActivity"
+            android:name=".PickUserEvents"
             android:label="Decide" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -36,10 +36,6 @@
             android:label="Concerts and Live Music">
         </activity>
 
-        <activity
-            android:name="com.ac.austin.now.PickUserEvents"
-            android:label="User Generated Events">
-        </activity>
 
         <activity
             android:name="com.ac.austin.now.PickHackathons"

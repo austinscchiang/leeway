@@ -26,7 +26,7 @@
         android:singleLine="true">
     </TextView>
     <TextView
-        android:id="@+id/event_location"
+        android:id="@+id/event_primary"
         android:layout_below="@+id/event_title"
         android:layout_toRightOf="@+id/event_thumbnail"
         android:layout_width="wrap_content"
@@ -37,8 +37,8 @@
         android:singleLine="true">
     </TextView>
     <TextView
-        android:id="@+id/event_friends"
-        android:layout_below="@+id/event_location"
+        android:id="@+id/event_secondary"
+        android:layout_below="@+id/event_primary"
         android:layout_toRightOf="@+id/event_thumbnail"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

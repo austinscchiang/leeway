@@ -27,6 +27,7 @@ public class FriendsEventsActivity extends Activity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_friend_events);
+        Parse.initialize(this, "cXbkz9olUPkokRVGGrES8bCUiNGoyCMS6F7FrKfD", "VaAJmOuV2t91IeYJOx2WERrGSUbkpvRcCiK66d8q");
     }
 
     @Override

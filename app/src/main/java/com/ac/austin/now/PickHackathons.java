@@ -71,8 +71,8 @@ public class PickHackathons extends Activity
                 ParseObject eventSubscription = new ParseObject("UserEvents3");
                 eventSubscription.put("eventType", "hackathon");
                 eventSubscription.put("name", hackathonsList.get(position)._name);
-                eventSubscription.put("time", hackathonsList.get(position)._time);
-                eventSubscription.put("place", hackathonsList.get(position)._place);
+                eventSubscription.put("secondary", hackathonsList.get(position)._time);
+                eventSubscription.put("primary", hackathonsList.get(position)._place);
                 eventSubscription.put("imageUrl", hackathonsList.get(position)._iconUrl);
                 eventSubscription.saveInBackground();
             }

@@ -70,8 +70,8 @@ public class PickConcerts extends Activity{
                 ParseObject eventSubscription = new ParseObject("UserEvents3");
                 eventSubscription.put("eventType", "concert");
                 eventSubscription.put("name", concertsList.get(position)._name);
-                eventSubscription.put("time", concertsList.get(position)._time);
-                eventSubscription.put("place", concertsList.get(position)._place);
+                eventSubscription.put("primary", concertsList.get(position)._time);
+                eventSubscription.put("secondary", concertsList.get(position)._place);
                 eventSubscription.put("imageUrl", concertsList.get(position)._iconUrl);
                 eventSubscription.saveInBackground();
             }

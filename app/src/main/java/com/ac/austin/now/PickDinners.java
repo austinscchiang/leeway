@@ -71,7 +71,8 @@ public class PickDinners extends Activity {
                 eventSubscription.put("name", dinnersList.get(position)._name);
                 eventSubscription.put("scoreIcon", dinnersList.get(position)._scoreIcon);
                 eventSubscription.put("previewIcon", dinnersList.get(position)._previewIcon);
-                eventSubscription.put("place", dinnersList.get(position)._place);
+                eventSubscription.put("primary", dinnersList.get(position)._place);
+                eventSubscription.put("secondary", "");
                 eventSubscription.saveInBackground();
             }
         });

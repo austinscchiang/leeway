@@ -5,12 +5,13 @@ package com.ac.austin.now;
  */
 public class UserEvent {
     public String _name;
-    public String _subtitle;
+    public String _primary;
     public String _imageUrl;
-    public String _info;
-    public UserEvent (String name, String subtitle, String imageUrl) {
+    public String _secondary;
+    public UserEvent (String name, String subtitle, String imageUrl, String secondary) {
         _name = name;
-        _subtitle = subtitle;
+        _primary = subtitle;
         _imageUrl = imageUrl;
+        _secondary = secondary;
     }
 }

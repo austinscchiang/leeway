@@ -76,9 +76,9 @@ public class PickMovies extends Activity
                 ParseObject eventSubscription = new ParseObject("UserEvents3");
                 eventSubscription.put("eventType", "movie");
                 eventSubscription.put("name", moviesList.get(position)._title);
-                eventSubscription.put("criticsRating", Integer.toString(moviesList.get(position)._criticsRating));
-                eventSubscription.put("audienceRating", Integer.toString(moviesList.get(position)._audienceRating));
-                eventSubscription.put("mpaaRating", moviesList.get(position)._mpaaRating);
+                String rating = "Critics: " + moviesList.get(position)._criticsRating + "% | " + "Audience: " + moviesList.get(position)._audienceRating + "% | " + "Rated: " + moviesList.get(position)._mpaaRating;
+                eventSubscription.put("primary", rating);
+                eventSubscription.put("secondary", "");
                 eventSubscription.put("imageUrl", moviesList.get(position)._imageUrl);
                 eventSubscription.saveInBackground();
 
