@@ -22,7 +22,12 @@
         </activity>
         <activity
             android:name="com.ac.austin.now.PickMovies"
-            android:label="@string/app_name">
+            android:label="Recent Blockbusters">
+        </activity>
+
+        <activity
+            android:name="com.ac.austin.now.PickHackathons"
+            android:label="Hackathons">
         </activity>
     </application>
 

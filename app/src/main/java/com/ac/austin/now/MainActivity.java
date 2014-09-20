@@ -47,6 +47,15 @@ public class MainActivity extends Activity
                     case 0:
                         intent = new Intent(getApplicationContext(), PickMovies.class);
                         break;
+                    case 1:
+                        intent = new Intent(getApplicationContext(), PickMovies.class);
+                        break;
+                    case 2:
+                        intent = new Intent(getApplicationContext(), PickMovies.class);
+                        break;
+                    case 3:
+                        intent = new Intent(getApplicationContext(), PickHackathons.class);
+                        break;
                     default:
                         intent = new Intent();
                         break;
