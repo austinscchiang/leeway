@@ -1,10 +1,12 @@
 package com.ac.austin.now;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.zip.GZIPInputStream;
+import android.app.Activity;
+import android.os.AsyncTask;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ListView;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -16,36 +18,33 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.app.Activity;
-import android.os.AsyncTask;
-import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ListView;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.zip.GZIPInputStream;
 
 /**
  * Created by austinchiang on 2014-09-20.
  */
-public class PickHackathons extends Activity
-{
+public class PickConcerts extends Activity{
     // the Rotten Tomatoes API key of your application! get this from their website
     private static final String API_KEY = "vxwjzfe4gaczt2qpurr33cyj";
 
-    private ListView hackathonssListView;
-    private ArrayList<Hackathon> hackathonsList = new ArrayList();
+    private ListView concertsListView;
+    private ArrayList<Concert> concertsList = new ArrayList();
 
-    private HackathonListAdapter adapter = null;
+    private ConcertListAdapter adapter = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_hackathon);
+        setContentView(R.layout.activity_concert);
 
-        hackathonssListView = (ListView) findViewById(R.id.list_hackathons);
+        concertsListView = (ListView) findViewById(R.id.list_concerts);
 
-        new RequestTask().execute("https://www.kimonolabs.com/api/46vt6zfe?apikey=2f216d8197b225ceca71483475e467f9");
+        new RequestTask().execute("https://www.kimonolabs.com/api/cc5sjff4?apikey=2f216d8197b225ceca71483475e467f9");
 
     }
 
@@ -58,13 +57,13 @@ public class PickHackathons extends Activity
         }
     }
 
-    private void refreshHackathonsList()
+    private void refreshConcertsList()
     {
-        adapter = new HackathonListAdapter(this, R.layout.hackathon_list_item_layout, hackathonsList);
-        hackathonssListView.setAdapter(adapter);
-        hackathonssListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        adapter = new ConcertListAdapter(this, R.layout.concert_list_item_layout, concertsList);
+        concertsListView.setAdapter(adapter);
+        concertsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view,
-                    int position, long id)
+                                    int position, long id)
             {
                 // make event
             }
@@ -96,13 +95,13 @@ public class PickHackathons extends Activity
                     // because JSON is the response format Rotten Tomatoes uses
                     JSONObject jsonResponse = new JSONObject(response);
 
-                    // fetch the array of movies in the response
-                    JSONArray hackathons = jsonResponse.getJSONObject("results").getJSONArray("collection1");
+                    // fetch the array of concerts in the response
+                    JSONArray concerts = jsonResponse.getJSONObject("results").getJSONArray("collection1");
 
-                    hackathonsList.addAll(processJSON(hackathons));
+                    concertsList.addAll(processJSON(concerts));
 
                     // update the UI
-                    refreshHackathonsList();
+                    refreshConcertsList();
                 }
                 catch (JSONException e)
                 {
@@ -156,27 +155,19 @@ public class PickHackathons extends Activity
         return responseString;
     }
 
-    public ArrayList<Hackathon> processJSON(JSONArray hackathons) throws JSONException
+    public ArrayList<Concert> processJSON(JSONArray concerts) throws JSONException
     {
-        Hackathon hackathonObject;
-        ArrayList<Hackathon> returnList = new ArrayList<Hackathon>();
-        for (int i = 0; i < hackathons.length()/2; i++)
+        Concert concertObject;
+        ArrayList<Concert> returnList = new ArrayList<Concert>();
+        for (int i = 0; i < concerts.length(); i++)
         {
-            JSONObject hackathon = hackathons.getJSONObject(i);
-            String name = (hackathon.getJSONObject("Title").getString("text"));
-            String time = (hackathon.getJSONObject("time").getString("text"));
-            String place = (hackathon.getJSONObject("place").getString("text"));
-            String iconUrl;
-            if(hackathon.getJSONArray("icon").length()>1){
-                iconUrl = hackathon.getJSONArray("icon").getJSONObject(1).getString("src");
-            }
-            else{
-                iconUrl = null;
-            }
-            if(iconUrl!=null){
-                hackathonObject = new Hackathon(iconUrl, name, time, place);
-                returnList.add(hackathonObject);
-            }
+            JSONObject concert = concerts.getJSONObject(i);
+            String name = (concert.getJSONObject("name").getString("text"));
+            String time = (concert.getString("time"));
+            String place = (concert.getJSONObject("place").getString("text"));
+            String icon = (concert.getJSONObject("icon").getString("src"));
+            concertObject = new Concert(name, time, place, icon);
+            returnList.add(concertObject);
         }
         return returnList;
     }

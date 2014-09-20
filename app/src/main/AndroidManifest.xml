@@ -26,6 +26,11 @@
         </activity>
 
         <activity
+            android:name="com.ac.austin.now.PickConcerts"
+            android:label="Concerts and Live Music">
+        </activity>
+
+        <activity
             android:name="com.ac.austin.now.PickHackathons"
             android:label="Hackathons">
         </activity>
