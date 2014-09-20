@@ -8,6 +8,8 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import com.parse.ParseObject;
+
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.StatusLine;
@@ -65,7 +67,13 @@ public class PickConcerts extends Activity{
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id)
             {
-                // make event
+                ParseObject eventSubscription = new ParseObject("UserEvents3");
+                eventSubscription.put("eventType", "concert");
+                eventSubscription.put("name", concertsList.get(position)._name);
+                eventSubscription.put("time", concertsList.get(position)._time);
+                eventSubscription.put("place", concertsList.get(position)._place);
+                eventSubscription.put("imageUrl", concertsList.get(position)._iconUrl);
+                eventSubscription.saveInBackground();
             }
         });
 

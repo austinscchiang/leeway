@@ -24,6 +24,8 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import com.parse.ParseObject;
+
 /**
  * Created by austinchiang on 2014-09-20.
  */
@@ -58,6 +60,10 @@ public class PickMovies extends Activity
         }
     }
 
+    private void toggleContents(View view) {
+
+    }
+
     private void refreshMoviesList()
     {
         adapter = new MovieListAdapter(this, R.layout.movie_list_item_layout, moviesList);
@@ -66,7 +72,17 @@ public class PickMovies extends Activity
             public void onItemClick(AdapterView<?> parent, View view,
                     int position, long id)
             {
-                // make event
+                // Move this to when the user selects participate button (after toggle)
+                ParseObject eventSubscription = new ParseObject("UserEvents3");
+                eventSubscription.put("eventType", "movie");
+                eventSubscription.put("name", moviesList.get(position)._title);
+                eventSubscription.put("criticsRating", Integer.toString(moviesList.get(position)._criticsRating));
+                eventSubscription.put("audienceRating", Integer.toString(moviesList.get(position)._audienceRating));
+                eventSubscription.put("mpaaRating", moviesList.get(position)._mpaaRating);
+                eventSubscription.put("imageUrl", moviesList.get(position)._imageUrl);
+                eventSubscription.saveInBackground();
+
+                toggleContents(view);
             }
         });
 

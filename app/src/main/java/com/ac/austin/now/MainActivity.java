@@ -12,6 +12,9 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import com.parse.*;
+import com.facebook.widget.LoginButton;
+
 public class MainActivity extends Activity
 {
     ArrayList<EventType> _eventTypeList = new ArrayList<EventType>();
@@ -23,6 +26,7 @@ public class MainActivity extends Activity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        Parse.initialize(this, "cXbkz9olUPkokRVGGrES8bCUiNGoyCMS6F7FrKfD", "VaAJmOuV2t91IeYJOx2WERrGSUbkpvRcCiK66d8q");
     }
 
     @Override
@@ -57,22 +61,8 @@ public class MainActivity extends Activity
                         intent = new Intent(getApplicationContext(), PickHackathons.class);
                         break;
                     default:
-                        intent = new Intent();
+                        intent = new Intent(getApplicationContext(), PickUserEvents.class);
                         break;
-                    // concerts
-//                    case 1:
-//                        intent = new Intent(getApplicationContext(), PickMovies.class);
-//                    // dining
-//                    case 2:
-//                        intent = new Intent(getApplicationContext(), PickMovies.class);
-//                    // hackathons
-//                    case 3:
-//                        intent = new Intent(getApplicationContext(), PickMovies.class);
-//                    // sporting event
-//                    case 4:
-//                        intent = new Intent(getApplicationContext(), PickMovies.class);
-
-
                 }
 
                 startActivity(intent);
@@ -100,7 +90,7 @@ public class MainActivity extends Activity
         int id = item.getItemId();
 
         // noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.a) {
             return true;
         }
 

@@ -3,6 +3,8 @@ package com.ac.austin.now;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import com.parse.Parse;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -59,22 +61,8 @@ public class FriendsEventsActivity extends Activity
                         intent = new Intent(getApplicationContext(), PickHackathons.class);
                         break;
                     default:
-                        intent = new Intent();
+                        intent = new Intent(getApplicationContext(), PickUserEvents.class);
                         break;
-                    // concerts
-//                    case 1:
-//                        intent = new Intent(getApplicationContext(), PickMovies.class);
-//                    // dining
-//                    case 2:
-//                        intent = new Intent(getApplicationContext(), PickMovies.class);
-//                    // hackathons
-//                    case 3:
-//                        intent = new Intent(getApplicationContext(), PickMovies.class);
-//                    // sporting event
-//                    case 4:
-//                        intent = new Intent(getApplicationContext(), PickMovies.class);
-
-
                 }
 
                 startActivity(intent);

@@ -24,6 +24,8 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import com.parse.ParseObject;
+
 /**
  * Created by austinchiang on 2014-09-20.
  */
@@ -66,7 +68,13 @@ public class PickHackathons extends Activity
             public void onItemClick(AdapterView<?> parent, View view,
                     int position, long id)
             {
-                // make event
+                ParseObject eventSubscription = new ParseObject("UserEvents3");
+                eventSubscription.put("eventType", "hackathon");
+                eventSubscription.put("name", hackathonsList.get(position)._name);
+                eventSubscription.put("time", hackathonsList.get(position)._time);
+                eventSubscription.put("place", hackathonsList.get(position)._place);
+                eventSubscription.put("imageUrl", hackathonsList.get(position)._iconUrl);
+                eventSubscription.saveInBackground();
             }
         });
 

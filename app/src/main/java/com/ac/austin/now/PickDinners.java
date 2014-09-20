@@ -8,6 +8,8 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import com.parse.ParseObject;
+
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.StatusLine;
@@ -64,7 +66,13 @@ public class PickDinners extends Activity {
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id)
             {
-                // make event
+                ParseObject eventSubscription = new ParseObject("UserEvents3");
+                eventSubscription.put("eventType", "dinner");
+                eventSubscription.put("name", dinnersList.get(position)._name);
+                eventSubscription.put("scoreIcon", dinnersList.get(position)._scoreIcon);
+                eventSubscription.put("previewIcon", dinnersList.get(position)._previewIcon);
+                eventSubscription.put("place", dinnersList.get(position)._place);
+                eventSubscription.saveInBackground();
             }
         });
 
