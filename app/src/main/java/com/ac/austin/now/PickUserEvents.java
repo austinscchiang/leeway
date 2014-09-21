@@ -80,8 +80,7 @@ public class PickUserEvents extends Activity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_events);
-
-        Parse.initialize(this, "hE92ChGDrAIrjxk3CplatSnd6lH6HISCsWQLD48l", "xXchuLxJIkjqcEQuWRyZhNDEsJNXU5pb6gMkwBZz");
+        Parse.initialize(this, "ZeUV6QK4coSIVkUSi71m96vIbANaQeNEbvtj3klI", "90HC87BRscSq8YT9ZjVahVtVIyncYuRN382QKTaW");
 
         eventsListView = (ListView) findViewById(R.id.list_events);
 
@@ -107,10 +106,8 @@ public class PickUserEvents extends Activity
                     eventsList.clear();
                     for (ParseObject data : parseObjects) {
 //                        data.deleteEventually();
-                        UserEvent temp = new UserEvent(data.getString("name"), data.getString("primary"), data.getString("imageUrl"), data.getString("secondary"), data.getInt("id"), data.getInt("votes"));
-                        int id = temp._id;
 
-                        eventsList.add(new UserEvent(data.getString("name"), data.getString("primary"), data.getString("imageUrl"), data.getString("secondary"), data.getInt("id"), data.getInt("votes")));
+                        eventsList.add(new UserEvent(data.getString("name"), data.getString("primary"), data.getString("imageUrl"), data.getString("secondary"), data.getInt("eventId"), data.getInt("votes")));
 
                     }
                     for (UserEvent event : eventsList) {

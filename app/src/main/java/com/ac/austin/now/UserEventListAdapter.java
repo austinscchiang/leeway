@@ -75,15 +75,14 @@ public class UserEventListAdapter extends ArrayAdapter {
                     ((UserApplication) _activity.getApplication()).votedForEvent(event._id);
                     event._votes++;
                     ParseQuery<ParseObject> query = ParseQuery.getQuery(_activity.getString(R.string.parse_object));
-                    final ParseQuery<ParseObject> eventId = ParseQuery.getQuery(_activity.getString(R.string.latest_id));
-                    query.whereEqualTo("id", event._id);
+                    query.whereEqualTo("eventId", event._id);
                     query.getFirstInBackground(new GetCallback<ParseObject>() {
                         @Override
                         public void done(ParseObject parseObject, ParseException e) {
                             // Move this to when the user selects participate button (after toggle)
+                            String name = parseObject.getString("name");
                             if (parseObject != null) {
                                 int num = event._votes;
-                                num++;
                                 parseObject.put("votes", num);
                                 parseObject.saveInBackground();
                             }

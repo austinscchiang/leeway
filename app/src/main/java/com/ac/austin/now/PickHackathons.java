@@ -99,22 +99,23 @@ public class PickHackathons extends Activity
                                     // Move this to when the user selects participate button (after toggle)
                                     if (parseObject == null) {
                                         ParseObject eventId = new ParseObject(getString(R.string.latest_id));
-                                        eventId.put("id", 1);
-                                        eventSubscription.put("id", 1);
+                                        eventId.put("eventId", 1);
                                         eventId.saveInBackground();
+                                        eventSubscription.put("eventId", 1);
+                                        eventSubscription.saveInBackground();
                                         ((UserApplication) getApplication()).votedForEvent(1);
                                     }
                                     else {
-                                        int num = parseObject.getInt("id");
+                                        int num = parseObject.getInt("eventId");
                                         num++;
-                                        parseObject.put("id", num);
+                                        parseObject.put("eventId", num);
                                         parseObject.saveInBackground();
-                                        eventSubscription.put("id", parseObject.getInt("id"));
-                                        ((UserApplication) getApplication()).votedForEvent(parseObject.getInt("id"));
+                                        eventSubscription.put("eventId", num);
+                                        eventSubscription.saveInBackground();
+                                        ((UserApplication) getApplication()).votedForEvent(num);
                                     }
                                 }
                             });
-                            eventSubscription.saveInBackground();
                         }
                         else {
                             parseObject.increment("votes");

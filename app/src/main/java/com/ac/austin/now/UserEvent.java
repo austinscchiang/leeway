@@ -9,7 +9,7 @@ public class UserEvent {
     public String _imageUrl;
     public String _secondary;
     public int _votes;
-    public int _id;
+    public int _id = 1;
     public boolean _hasVoted = false;
     public UserEvent (String name, String subtitle, String imageUrl, String secondary, int id, int votes) {
         _name = name;
