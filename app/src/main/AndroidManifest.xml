@@ -16,7 +16,9 @@
 
         <activity
             android:name=".PickUserEvents"
-            android:label="@string/app_name">
+            android:label="@string/app_name"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -25,27 +27,37 @@
         </activity>
         <activity
             android:name="com.ac.austin.now.AddNewEventActivity"
-            android:label="New Event">
+            android:label="New Event"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait">
         </activity>
         <activity
             android:name="com.ac.austin.now.PickMovies"
-            android:label="Recent Blockbusters">
+            android:label="Recent Blockbusters"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait">
         </activity>
 
         <activity
             android:name="com.ac.austin.now.PickConcerts"
-            android:label="Concerts and Live Music">
+            android:label="Concerts and Live Music"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait">
         </activity>
 
 
         <activity
             android:name="com.ac.austin.now.PickHackathons"
-            android:label="Hackathons">
+            android:label="Hackathons"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait">
         </activity>
 
         <activity
             android:name="com.ac.austin.now.PickDinners"
-            android:label="Places to Eat">
+            android:label="Places to Eat"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait">
         </activity>
     </application>
 
