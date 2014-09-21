@@ -1,7 +1,27 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     >
+
     <item android:id="@+id/new_event"
         android:icon="@drawable/ic_action_new"
         android:title="New Event"
-        />
+        android:showAsAction="always">
+
+
+        <menu>
+        <group>
+            <item android:id="@+id/new_dinner"
+                android:icon="@drawable/food"
+                android:title="Food" />
+            <item android:id="@+id/new_concert"
+                android:icon="@drawable/concert"
+                android:title="Music" />
+            <item android:id="@+id/new_movie"
+                android:icon="@drawable/movie"
+                android:title="Movie" />
+            <item android:id="@+id/new_hack"
+                android:icon="@drawable/hack"
+                android:title="Hackathon" />
+        </group>
+        </menu>
+    </item>
 </menu>

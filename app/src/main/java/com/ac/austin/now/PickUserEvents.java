@@ -51,7 +51,7 @@ public class PickUserEvents extends Activity
     public boolean onCreateOptionsMenu(Menu menu)
     {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.add_event, menu);
+        getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
 
@@ -64,8 +64,24 @@ public class PickUserEvents extends Activity
         int id = item.getItemId();
 
         // noinspection SimplifiableIfStatement
-        if (id == R.id.new_event) {
-            Intent intent = new Intent(getApplicationContext(), AddNewEventActivity.class);
+//        if
+        if (id == R.id.new_dinner) {
+            Intent intent = new Intent(getApplicationContext(), PickDinners.class);
+            startActivity(intent);
+            return true;
+        }
+        else if (id == R.id.new_concert) {
+            Intent intent = new Intent(getApplicationContext(), PickConcerts.class);
+            startActivity(intent);
+            return true;
+        }
+        else if (id == R.id.new_movie) {
+            Intent intent = new Intent(getApplicationContext(), PickMovies.class);
+            startActivity(intent);
+            return true;
+        }
+        else if (id == R.id.new_hack) {
+            Intent intent = new Intent(getApplicationContext(), PickHackathons.class);
             startActivity(intent);
             return true;
         }
