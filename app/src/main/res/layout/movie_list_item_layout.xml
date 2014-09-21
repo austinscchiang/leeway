@@ -35,16 +35,5 @@
         android:text="Loading"
         android:singleLine="true">
     </TextView>
-    <TextView
-        android:id="@+id/movie_friends"
-        android:layout_below="@+id/movie_score"
-        android:layout_toRightOf="@+id/movie_thumbnail"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:gravity="left"
-        android:textSize="14sp"
-        android:text="Jay and 4 other friends want to see this"
-        android:singleLine="true">
-    </TextView>
 
 </RelativeLayout>
