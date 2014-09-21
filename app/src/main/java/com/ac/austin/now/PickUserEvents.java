@@ -91,10 +91,11 @@ public class PickUserEvents extends Activity
     {
         super.onResume();ParseQuery<ParseObject> query = ParseQuery.getQuery("UserEvents3");
         //query.whereContainedIn("userId", Arrays.asList(friendList));
-        query.setLimit(10);
+        //query.setLimit(1);
         query.findInBackground(new FindCallback<ParseObject>() {
             @Override
             public void done(List<ParseObject> parseObjects, ParseException e) {
+                //ParseObject.deleteAllInBackground(parseObjects, null);
                 if (e == null) {
                     eventsList.clear();
                     for (ParseObject data : parseObjects) {

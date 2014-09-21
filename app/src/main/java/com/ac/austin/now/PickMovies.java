@@ -24,7 +24,10 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import com.parse.GetCallback;
+import com.parse.ParseException;
 import com.parse.ParseObject;
+import com.parse.ParseQuery;
 
 /**
  * Created by austinchiang on 2014-09-20.
@@ -72,15 +75,31 @@ public class PickMovies extends Activity
             public void onItemClick(AdapterView<?> parent, View view,
                     int position, long id)
             {
-                // Move this to when the user selects participate button (after toggle)
-                ParseObject eventSubscription = new ParseObject("UserEvents3");
-                eventSubscription.put("eventType", "movie");
-                eventSubscription.put("name", moviesList.get(position)._title);
-                String rating = "Critics: " + moviesList.get(position)._criticsRating + "% | " + "Audience: " + moviesList.get(position)._audienceRating + "% | " + "Rated: " + moviesList.get(position)._mpaaRating;
-                eventSubscription.put("primary", rating);
-                eventSubscription.put("secondary", "");
-                eventSubscription.put("imageUrl", moviesList.get(position)._imageUrl);
-                eventSubscription.saveInBackground();
+                ParseQuery<ParseObject> query = ParseQuery.getQuery("UserEvent4");
+                query.whereEqualTo("eventType", "movie");
+                query.whereEqualTo("id", moviesList.get(position)._id);
+                final int pos = position;
+                query.getFirstInBackground(new GetCallback<ParseObject>() {
+                    @Override
+                    public void done(ParseObject parseObject, ParseException e) {
+                        // Move this to when the user selects participate button (after toggle)
+                        if (parseObject == null) {
+                            ParseObject eventSubscription = new ParseObject("UserEvents4");
+                            eventSubscription.put("eventType", "movie");
+                            eventSubscription.put("name", moviesList.get(pos)._title);
+                            String rating = "Critics: " + moviesList.get(pos)._criticsRating + "% | " + "Audience: " + moviesList.get(pos)._audienceRating + "% | " + "Rated: " + moviesList.get(pos)._mpaaRating;
+                            eventSubscription.put("primary", rating);
+                            eventSubscription.put("secondary", "");
+                            eventSubscription.put("imageUrl", moviesList.get(pos)._imageUrl);
+                            eventSubscription.put("id", moviesList.get(pos)._id);
+                            eventSubscription.put("votes", 0);
+                            eventSubscription.saveInBackground();
+                        } else {
+                            parseObject.increment("votes");
+                            parseObject.saveInBackground();
+                        }
+                    }
+                });
 
                 toggleContents(view);
             }
@@ -180,11 +199,12 @@ public class PickMovies extends Activity
         {
             JSONObject movie = movies.getJSONObject(i);
             String title = (movie.getString("title"));
+            int id = (Integer.parseInt(movie.getString("id")));
             int criticsRating = (Integer.parseInt(movie.getJSONObject("ratings").getString("critics_score")));
             int audienceRating = (Integer.parseInt(movie.getJSONObject("ratings").getString("audience_score")));
             String mpaaRating = (movie.getString("mpaa_rating"));
             String imageUrl = (movie.getJSONObject("posters").getString("profile"));
-            movieObject = new Movie(title, criticsRating, audienceRating, mpaaRating, imageUrl);
+            movieObject = new Movie(title, id, criticsRating, audienceRating, mpaaRating, imageUrl);
             returnList.add(movieObject);
         }
         return returnList;

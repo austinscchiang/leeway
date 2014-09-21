@@ -8,7 +8,10 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import com.parse.GetCallback;
+import com.parse.ParseException;
 import com.parse.ParseObject;
+import com.parse.ParseQuery;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -64,19 +67,34 @@ public class PickDinners extends Activity {
         dinnersListView.setAdapter(adapter);
         dinnersListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view,
-                                    int position, long id)
-            {
-                ParseObject eventSubscription = new ParseObject("UserEvents3");
-                eventSubscription.put("eventType", "dinner");
-                eventSubscription.put("name", dinnersList.get(position)._name);
-                eventSubscription.put("scoreIcon", dinnersList.get(position)._scoreIcon);
-                eventSubscription.put("previewIcon", dinnersList.get(position)._previewIcon);
-                eventSubscription.put("primary", dinnersList.get(position)._place);
-                eventSubscription.put("secondary", "");
-                eventSubscription.saveInBackground();
+                                    int position, long id) {
+                ParseQuery<ParseObject> query = ParseQuery.getQuery("UserEvent4");
+                query.whereEqualTo("eventType", "dinner");
+                query.whereEqualTo("id", dinnersList.get(position)._id);
+                final int pos = position;
+                query.getFirstInBackground(new GetCallback<ParseObject>() {
+                    @Override
+                    public void done(ParseObject parseObject, ParseException e) {
+                        // Move this to when the user selects participate button (after toggle)
+                        if (parseObject == null) {
+                            ParseObject eventSubscription = new ParseObject("UserEvents4");
+                            eventSubscription.put("eventType", "dinner");
+                            eventSubscription.put("name", dinnersList.get(pos)._name);
+                            eventSubscription.put("scoreIcon", dinnersList.get(pos)._scoreIcon);
+                            eventSubscription.put("imageUrl", dinnersList.get(pos)._previewIcon);
+                            eventSubscription.put("primary", dinnersList.get(pos)._place);
+                            eventSubscription.put("secondary", "");
+                            eventSubscription.put("votes", 0);
+                            eventSubscription.put("id", dinnersList.get(pos)._id);
+                            eventSubscription.saveInBackground();
+                        } else {
+                            parseObject.increment("votes");
+                            parseObject.saveInBackground();
+                        }
+                    }
+                });
             }
         });
-
     }
 
     private class RequestTask extends AsyncTask<String, String, String>
@@ -129,10 +147,11 @@ public class PickDinners extends Activity {
         {
             JSONObject dinner = dinners.getJSONObject(i);
             String name = (dinner.getString("name"));
+            String id = (dinner.getString("id"));
             String scoreIcon = (dinner.getString("rating_img_url"));
-            String previewIcon = (dinner.getString("snippet_image_url"));
+            String previewIcon = (dinner.getString("image_url"));
             String place = (dinner.getJSONObject("location").getJSONArray("address").getString(0));
-            dinnerObject = new Dinner(name, scoreIcon, previewIcon, place);
+            dinnerObject = new Dinner(name, id, scoreIcon, previewIcon, place);
             returnList.add(dinnerObject);
         }
         return returnList;
