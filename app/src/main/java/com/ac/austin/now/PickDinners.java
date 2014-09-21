@@ -167,7 +167,7 @@ public class PickDinners extends Activity
             JSONObject dinner = dinners.getJSONObject(i);
             String name = (dinner.getString("name"));
             String id = (dinner.getString("id"));
-            String scoreIcon = (dinner.getString("rating_img_url"));
+            String scoreIcon = (dinner.getString("rating_img_url_large"));
             String previewIcon = (dinner.getString("image_url"));
             String place = (dinner.getJSONObject("location").getJSONArray("address").getString(0));
             dinnerObject = new Dinner(name, id, scoreIcon, previewIcon, place);
