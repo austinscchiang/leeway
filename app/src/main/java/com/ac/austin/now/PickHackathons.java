@@ -17,12 +17,14 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
+import android.app.Application;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.parse.GetCallback;
 import com.parse.ParseException;
@@ -63,19 +65,67 @@ public class PickHackathons extends Activity
         }
     }
 
-    private void refreshHackathonsList() {
+    private void refreshHackathonsList()
+    {
         adapter = new HackathonListAdapter(this, R.layout.hackathon_list_item_layout, hackathonsList);
         hackathonssListView.setAdapter(adapter);
         hackathonssListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            public void onItemClick(AdapterView<?> parent, View view,
-                                    int position, long id) {
-                ParseQuery<ParseObject> query = ParseQuery.getQuery("UserEvents4");
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id)
+            {
+                ParseQuery<ParseObject> query = ParseQuery.getQuery(getString(R.string.parse_object));
+                final ParseQuery<ParseObject> eventId = ParseQuery.getQuery(getString(R.string.latest_id));
                 query.whereEqualTo("eventType", "hackathon");
                 query.whereEqualTo("name", hackathonsList.get(position)._name);
                 final int pos = position;
                 query.getFirstInBackground(new GetCallback<ParseObject>() {
                     @Override
-                    public void done(ParseObject parseObject, ParseException e) {
+                    public void done(ParseObject parseObject, ParseException e)
+                    {
+                        // Move this to when the user selects participate button (after toggle)
+                        if (parseObject == null) {
+                            final ParseObject eventSubscription = new ParseObject(getString(R.string.parse_object));
+                            eventSubscription.put("eventType", "hackathon");
+                            eventSubscription.put("name", hackathonsList.get(pos)._name);
+                            eventSubscription.put("secondary", hackathonsList.get(pos)._time);
+                            eventSubscription.put("primary", hackathonsList.get(pos)._place);
+                            eventSubscription.put("imageUrl", hackathonsList.get(pos)._iconUrl);
+                            eventSubscription.put("votes", 1);
+
+
+                            eventId.getFirstInBackground(new GetCallback<ParseObject>() {
+                                @Override
+                                public void done(ParseObject parseObject, ParseException e)
+                                {
+                                    // Move this to when the user selects participate button (after toggle)
+                                    if (parseObject == null) {
+                                        ParseObject eventId = new ParseObject(getString(R.string.latest_id));
+                                        eventId.put("id", 1);
+                                        eventSubscription.put("id", 1);
+                                        eventId.saveInBackground();
+                                        ((UserApplication) getApplication()).votedForEvent(1);
+                                    }
+                                    else {
+                                        int num = parseObject.getInt("id");
+                                        num++;
+                                        parseObject.put("id", num);
+                                        parseObject.saveInBackground();
+                                        eventSubscription.put("id", parseObject.getInt("id"));
+                                        ((UserApplication) getApplication()).votedForEvent(parseObject.getInt("id"));
+                                    }
+                                }
+                            });
+                            eventSubscription.saveInBackground();
+                        }
+                        else {
+                            parseObject.increment("votes");
+                            parseObject.saveInBackground();
+                        }
+                    }
+                });
+                eventId.getFirstInBackground(new GetCallback<ParseObject>() {
+                    @Override
+                    public void done(ParseObject parseObject, ParseException e)
+                    {
                         // Move this to when the user selects participate button (after toggle)
                         if (parseObject == null) {
                             ParseObject eventSubscription = new ParseObject("UserEvents4");
@@ -84,13 +134,17 @@ public class PickHackathons extends Activity
                             eventSubscription.put("secondary", hackathonsList.get(pos)._time);
                             eventSubscription.put("primary", hackathonsList.get(pos)._place);
                             eventSubscription.put("imageUrl", hackathonsList.get(pos)._iconUrl);
+                            eventSubscription.put("votes", 0);
                             eventSubscription.saveInBackground();
-                        } else {
+                        }
+                        else {
                             parseObject.increment("votes");
                             parseObject.saveInBackground();
                         }
                     }
                 });
+
+                Toast.makeText(getApplicationContext(), "Added \"" + hackathonsList.get(pos)._name + "\"to Event Voting Pool", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -183,20 +237,20 @@ public class PickHackathons extends Activity
     {
         Hackathon hackathonObject;
         ArrayList<Hackathon> returnList = new ArrayList<Hackathon>();
-        for (int i = 0; i < hackathons.length()/2; i++)
+        for (int i = 0; i < hackathons.length() / 2; i++)
         {
             JSONObject hackathon = hackathons.getJSONObject(i);
             String name = (hackathon.getJSONObject("Title").getString("text"));
             String time = (hackathon.getJSONObject("time").getString("text"));
             String place = (hackathon.getJSONObject("place").getString("text"));
             String iconUrl;
-            if(hackathon.getJSONArray("icon").length()>1){
+            if (hackathon.getJSONArray("icon").length() > 1) {
                 iconUrl = hackathon.getJSONArray("icon").getJSONObject(1).getString("src");
             }
-            else{
+            else {
                 iconUrl = null;
             }
-            if(iconUrl!=null){
+            if (iconUrl != null) {
                 hackathonObject = new Hackathon(iconUrl, name, time, place);
                 returnList.add(hackathonObject);
             }

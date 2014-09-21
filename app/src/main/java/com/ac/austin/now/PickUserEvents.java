@@ -1,28 +1,12 @@
 package com.ac.austin.now;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.zip.GZIPInputStream;
-
-import org.apache.http.HttpResponse;
-import org.apache.http.HttpStatus;
-import org.apache.http.StatusLine;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -45,7 +29,6 @@ public class PickUserEvents extends Activity
     private ArrayList<String> friendList = new ArrayList();
 
     private UserEventListAdapter adapter = null;
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu)
@@ -85,6 +68,9 @@ public class PickUserEvents extends Activity
             startActivity(intent);
             return true;
         }
+        else if (id == R.id.refresh) {
+            refresh();
+        }
 
         return super.onOptionsItemSelected(item);
     }
@@ -99,23 +85,41 @@ public class PickUserEvents extends Activity
 
         eventsListView = (ListView) findViewById(R.id.list_events);
 
-
     }
 
     @Override
     public void onResume()
     {
-        super.onResume();ParseQuery<ParseObject> query = ParseQuery.getQuery("UserEvents4");
-        //query.whereContainedIn("userId", Arrays.asList(friendList));
-        //query.setLimit(1);
+        super.onResume();
+        refresh();
+    }
+
+    public void refresh()
+    {
+        ParseQuery<ParseObject> query = ParseQuery.getQuery(getString(R.string.parse_object));
+        query.setLimit(10);
         query.findInBackground(new FindCallback<ParseObject>() {
             @Override
-            public void done(List<ParseObject> parseObjects, ParseException e) {
+            public void done(List<ParseObject> parseObjects, ParseException e)
+            {
 //                ParseObject.deleteAllInBackground(parseObjects, null);
                 if (e == null) {
                     eventsList.clear();
                     for (ParseObject data : parseObjects) {
-                        eventsList.add(new UserEvent(data.getString("name"), data.getString("primary"), data.getString("imageUrl"), data.getString("secondary")));
+//                        data.deleteEventually();
+                        UserEvent temp = new UserEvent(data.getString("name"), data.getString("primary"), data.getString("imageUrl"), data.getString("secondary"), data.getInt("id"), data.getInt("votes"));
+                        int id = temp._id;
+
+                        eventsList.add(new UserEvent(data.getString("name"), data.getString("primary"), data.getString("imageUrl"), data.getString("secondary"), data.getInt("id"), data.getInt("votes")));
+
+                    }
+                    for (UserEvent event : eventsList) {
+                        if (((UserApplication) getApplication()).hasVoted(event._id)) {
+                            event._hasVoted = true;
+                        }
+                        else {
+                            event._hasVoted = false;
+                        }
                     }
                     refreshEventsList();
                 }
@@ -123,8 +127,9 @@ public class PickUserEvents extends Activity
         });
     }
 
-    private void toggleContents(View view) {
-    // show selection/dismissal options and more info
+    private void toggleContents(View view)
+    {
+        // show selection/dismissal options and more info
     }
 
     private void refreshEventsList()
@@ -133,13 +138,12 @@ public class PickUserEvents extends Activity
         eventsListView.setAdapter(adapter);
         eventsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view,
-                                    int position, long id)
+                    int position, long id)
             {
                 toggleContents(view);
             }
         });
 
     }
-
 
 }

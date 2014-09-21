@@ -12,6 +12,11 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.parse.GetCallback;
+import com.parse.ParseException;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
+
 import org.w3c.dom.Text;
 
 import java.io.InputStream;
@@ -25,6 +30,9 @@ public class UserEventListAdapter extends ArrayAdapter {
     private LayoutInflater _inflater;
     private int _layout;
     private ArrayList<UserEvent> _entries;
+    private int plus;
+    private int check;
+    private Activity _activity;
 
     private TextView _eventTypeTextView;
 
@@ -33,12 +41,16 @@ public class UserEventListAdapter extends ArrayAdapter {
         _layout = textViewResourceId;
         _entries = entries;
         _inflater = LayoutInflater.from(a);
+        _activity = a;
+
+        plus = a.getResources().getIdentifier("@drawable/plus_icon", null, a.getPackageName());
+        check = a.getResources().getIdentifier("@drawable/checkmark_icon", null, a.getPackageName());
     }
 
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        UserEvent event = _entries.get(position);
+        final UserEvent event = _entries.get(position);
         View v = null;
         if (convertView != null) {
             v = convertView;
@@ -48,13 +60,47 @@ public class UserEventListAdapter extends ArrayAdapter {
         TextView eventTitleView = (TextView)v.findViewById(R.id.event_title);
         TextView eventPrimaryView = (TextView)v.findViewById(R.id.event_primary);
         TextView eventSecondaryView = (TextView)v.findViewById(R.id.event_secondary);
+        final TextView eventFriendView = (TextView)v.findViewById(R.id.event_friends);
         ImageView eventThumbnailView = (ImageView)v.findViewById(R.id.event_thumbnail);
+        final ImageView eventAddView = (ImageView)v.findViewById(R.id.event_add_icon);
 
+        if(event._hasVoted){
+            eventAddView.setImageResource(check);
+        }
+        else{
+            eventAddView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    event._hasVoted = true;
+                    ((UserApplication) _activity.getApplication()).votedForEvent(event._id);
+                    event._votes++;
+                    ParseQuery<ParseObject> query = ParseQuery.getQuery(_activity.getString(R.string.parse_object));
+                    final ParseQuery<ParseObject> eventId = ParseQuery.getQuery(_activity.getString(R.string.latest_id));
+                    query.whereEqualTo("id", event._id);
+                    query.getFirstInBackground(new GetCallback<ParseObject>() {
+                        @Override
+                        public void done(ParseObject parseObject, ParseException e) {
+                            // Move this to when the user selects participate button (after toggle)
+                            if (parseObject != null) {
+                                int num = event._votes;
+                                num++;
+                                parseObject.put("votes", num);
+                                parseObject.saveInBackground();
+                            }
+                        }
+                    });
+                    eventFriendView.setText(event._votes+((event._votes==1)?" friend is ":" friends are ") + " going.");
+                    eventAddView.setImageResource(check);
+                }
+            });
+        }
         eventTitleView.setText(event._name);
         eventPrimaryView.setText(event._primary);
         if(event._secondary != null && !event._secondary.equals("")){
             eventSecondaryView.setText(event._secondary);
+            eventSecondaryView.setVisibility(View.VISIBLE);
         }
+        eventFriendView.setText(event._votes+((event._votes==1)?" friend is ":" friends are ") + " going.");
         new LoadImageTask(eventThumbnailView)
                 .execute(event._imageUrl);
         return v;

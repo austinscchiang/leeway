@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.parse.GetCallback;
 import com.parse.ParseException;
@@ -70,7 +71,8 @@ public class PickConcerts extends Activity{
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id)
             {
-                ParseQuery<ParseObject> query = ParseQuery.getQuery("UserEvents4");
+                ParseQuery<ParseObject> query = ParseQuery.getQuery(getString(R.string.parse_object));
+                final ParseQuery<ParseObject> eventId = ParseQuery.getQuery(getString(R.string.latest_id));
                 query.whereEqualTo("eventType", "concert");
                 query.whereEqualTo("name", concertsList.get(position)._name);
                 query.whereEqualTo("primary", concertsList.get(position)._time);
@@ -81,13 +83,34 @@ public class PickConcerts extends Activity{
                     public void done(ParseObject parseObject, ParseException e) {
                         // Move this to when the user selects participate button (after toggle)
                         if (parseObject == null) {
-                            ParseObject eventSubscription = new ParseObject("UserEvents4");
+                            final ParseObject eventSubscription = new ParseObject(getString(R.string.parse_object));
                             eventSubscription.put("eventType", "concert");
                             eventSubscription.put("name", concertsList.get(pos)._name);
                             eventSubscription.put("primary", concertsList.get(pos)._time);
                             eventSubscription.put("secondary", concertsList.get(pos)._place);
                             eventSubscription.put("imageUrl", concertsList.get(pos)._iconUrl);
-                            eventSubscription.put("votes", 0);
+                            eventSubscription.put("votes", 1);
+                            eventId.getFirstInBackground(new GetCallback<ParseObject>() {
+                                @Override
+                                public void done(ParseObject parseObject, ParseException e)
+                                {
+                                    // Move this to when the user selects participate button (after toggle)
+                                    if (parseObject == null) {
+                                        ParseObject eventId = new ParseObject(getString(R.string.latest_id));
+                                        eventId.put("id", 1);
+                                        eventSubscription.put("id", 1);
+                                        eventId.saveInBackground();
+                                        ((UserApplication) getApplication()).votedForEvent(1);
+                                    }
+                                    else {
+                                        parseObject.increment("id");
+                                        parseObject.saveInBackground();
+                                        eventSubscription.put("id", parseObject.getInt("id"));
+                                        ((UserApplication) getApplication()).votedForEvent(parseObject.getInt("id"));
+                                    }
+                                }
+                            });
+
                             eventSubscription.saveInBackground();
                         } else {
                             parseObject.increment("votes");
@@ -95,6 +118,9 @@ public class PickConcerts extends Activity{
                         }
                     }
                 });
+
+                Toast.makeText(getApplicationContext(), "Added \""+concertsList.get(pos)._name+"\"to Event Voting Pool", Toast.LENGTH_SHORT).show();
+
             }
         });
 

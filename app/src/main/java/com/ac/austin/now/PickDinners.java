@@ -1,5 +1,14 @@
 package com.ac.austin.now;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.zip.GZIPInputStream;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.app.Activity;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -7,32 +16,18 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 
-import org.apache.http.HttpResponse;
-import org.apache.http.HttpStatus;
-import org.apache.http.StatusLine;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.zip.GZIPInputStream;
-
 /**
  * Created by austinchiang on 2014-09-20.
  */
-public class PickDinners extends Activity {
+public class PickDinners extends Activity
+{
     YelpAPI _yelpApi = new YelpAPI("LqeDHctSMkc3KeV7qy8gLQ", "HhUV2dwiW35MDk68twXP62tUdXk", "p-2jK2LGuo0ItJPCiKCHRYagRCei2gen", "2BOEeKWpyBHSlvS8Jm00Quh-FTE");
 
     private ListView dinnersListView;
@@ -66,31 +61,57 @@ public class PickDinners extends Activity {
         adapter = new DinnerListAdapter(this, R.layout.dinner_list_item_layout, dinnersList);
         dinnersListView.setAdapter(adapter);
         dinnersListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            public void onItemClick(AdapterView<?> parent, View view,
-                                    int position, long id) {
-                ParseQuery<ParseObject> query = ParseQuery.getQuery("UserEvents4");
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                final ParseQuery<ParseObject> eventId = ParseQuery.getQuery(getString(R.string.latest_id));
+                ParseQuery<ParseObject> query = ParseQuery.getQuery(getString(R.string.parse_object));
                 query.whereEqualTo("eventType", "dinner");
-                query.whereEqualTo("id", dinnersList.get(position)._id);
+                query.whereEqualTo("name", dinnersList.get(position)._name);
                 final int pos = position;
                 query.getFirstInBackground(new GetCallback<ParseObject>() {
                     @Override
-                    public void done(ParseObject parseObject, ParseException e) {
+                    public void done(ParseObject parseObject, ParseException e)
+                    {
                         // Move this to when the user selects participate button (after toggle)
                         if (parseObject == null) {
-                            ParseObject eventSubscription = new ParseObject("UserEvents4");
+                            final ParseObject eventSubscription = new ParseObject(getString(R.string.parse_object));
                             eventSubscription.put("eventType", "dinner");
                             eventSubscription.put("name", dinnersList.get(pos)._name);
                             eventSubscription.put("scoreIcon", dinnersList.get(pos)._scoreIcon);
                             eventSubscription.put("imageUrl", dinnersList.get(pos)._previewIcon);
                             eventSubscription.put("primary", dinnersList.get(pos)._place);
                             eventSubscription.put("secondary", "");
-                            eventSubscription.put("votes", 0);
+                            eventSubscription.put("votes", 1);
+                            eventId.getFirstInBackground(new GetCallback<ParseObject>() {
+                                @Override
+                                public void done(ParseObject parseObject, ParseException e)
+                                {
+                                    // Move this to when the user selects participate button (after toggle)
+                                    if (parseObject == null) {
+                                        ParseObject eventId = new ParseObject(getString(R.string.latest_id));
+                                        eventId.put("id", 1);
+                                        eventSubscription.put("id", 1);
+                                        eventId.saveInBackground();
+                                        ((UserApplication) getApplication()).votedForEvent(1);
+                                    }
+                                    else {
+                                        int num = parseObject.getInt("id");
+                                        num++;
+                                        parseObject.put("id", num);
+                                        parseObject.saveInBackground();
+                                        eventSubscription.put("id", parseObject.getInt("id"));
+                                        ((UserApplication) getApplication()).votedForEvent(parseObject.getInt("id"));
+                                    }
+                                }
+                            });
                             eventSubscription.put("id", dinnersList.get(pos)._id);
                             eventSubscription.saveInBackground();
-                        } else {
+                        }
+                        else {
                             parseObject.increment("votes");
                             parseObject.saveInBackground();
                         }
+
+                        Toast.makeText(getApplicationContext(), "Added \""+dinnersList.get(pos)._name+"\"  to Event Voting Pool", Toast.LENGTH_SHORT).show();
                     }
                 });
             }
@@ -136,8 +157,6 @@ public class PickDinners extends Activity {
             }
         }
     }
-
-
 
     public ArrayList<Dinner> processJSON(JSONArray dinners) throws JSONException
     {

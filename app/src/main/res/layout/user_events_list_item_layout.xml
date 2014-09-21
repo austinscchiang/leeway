@@ -3,13 +3,23 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="60dp"
+    android:layout_height="80dp"
     android:layout_marginBottom="5dp">
+
+    <ImageView
+        android:id="@+id/event_add_icon"
+        android:layout_alignParentRight="true"
+        android:layout_height="30dp"
+        android:layout_width="30dp"
+        android:layout_marginRight="10dp"
+        android:layout_centerVertical="true"
+        android:src="@drawable/plus_icon"
+        />
     <ImageView
         android:id="@+id/event_thumbnail"
         android:layout_alignParentLeft="true"
-        android:layout_height="60dp"
-        android:layout_width="40dp"
+        android:layout_height="80dp"
+        android:layout_width="50dp"
         android:layout_marginRight="10dp"
         android:scaleType="centerCrop"
         />
@@ -45,6 +55,18 @@
         android:gravity="left"
         android:textSize="11sp"
         android:text="Jay and 4 other friends are going"
+        android:singleLine="true"
+        android:visibility="gone">
+    </TextView>
+    <TextView
+        android:id="@+id/event_friends"
+        android:layout_below="@+id/event_secondary"
+        android:layout_toRightOf="@+id/event_thumbnail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="left"
+        android:textSize="11sp"
+        android:text="4 other friends are going"
         android:singleLine="true">
     </TextView>
 </RelativeLayout>

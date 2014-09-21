@@ -7,10 +7,10 @@
     <ImageView
         android:id="@+id/concert_thumbnail"
         android:layout_alignParentLeft="true"
-        android:layout_width="80dp"
-        android:layout_height="fill_parent"
+        android:layout_height="80dp"
+        android:layout_width="50dp"
         android:layout_marginRight="10dp"
-        android:scaleType="fitXY"
+        android:scaleType="centerCrop"
         />
     <TextView
         android:id="@+id/concert_name"

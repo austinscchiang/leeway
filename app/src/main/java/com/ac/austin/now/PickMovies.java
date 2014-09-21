@@ -23,6 +23,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.parse.GetCallback;
 import com.parse.ParseException;
@@ -75,24 +76,46 @@ public class PickMovies extends Activity
             public void onItemClick(AdapterView<?> parent, View view,
                     int position, long id)
             {
-                ParseQuery<ParseObject> query = ParseQuery.getQuery("UserEvents4");
+                final ParseQuery<ParseObject> eventId = ParseQuery.getQuery(getString(R.string.latest_id));
+                ParseQuery<ParseObject> query = ParseQuery.getQuery(getString(R.string.parse_object));
                 query.whereEqualTo("eventType", "movie");
-                query.whereEqualTo("id", moviesList.get(position)._id);
+                query.whereEqualTo("name", moviesList.get(position)._title);
                 final int pos = position;
                 query.getFirstInBackground(new GetCallback<ParseObject>() {
                     @Override
                     public void done(ParseObject parseObject, ParseException e) {
                         // Move this to when the user selects participate button (after toggle)
                         if (parseObject == null) {
-                            ParseObject eventSubscription = new ParseObject("UserEvents4");
+                            final ParseObject eventSubscription = new ParseObject(getString(R.string.parse_object));
                             eventSubscription.put("eventType", "movie");
                             eventSubscription.put("name", moviesList.get(pos)._title);
                             String rating = "Critics: " + moviesList.get(pos)._criticsRating + "% | " + "Audience: " + moviesList.get(pos)._audienceRating + "% | " + "Rated: " + moviesList.get(pos)._mpaaRating;
                             eventSubscription.put("primary", rating);
                             eventSubscription.put("secondary", "");
                             eventSubscription.put("imageUrl", moviesList.get(pos)._imageUrl);
-                            eventSubscription.put("id", moviesList.get(pos)._id);
-                            eventSubscription.put("votes", 0);
+                            eventSubscription.put("votes", 1);
+                            eventId.getFirstInBackground(new GetCallback<ParseObject>() {
+                                @Override
+                                public void done(ParseObject parseObject, ParseException e)
+                                {
+                                    // Move this to when the user selects participate button (after toggle)
+                                    if (parseObject == null) {
+                                        ParseObject eventId = new ParseObject(getString(R.string.latest_id));
+                                        eventId.put("id", 1);
+                                        eventSubscription.put("id", 1);
+                                        eventId.saveInBackground();
+                                        ((UserApplication) getApplication()).votedForEvent(1);
+                                    }
+                                    else {
+                                        int num = parseObject.getInt("id");
+                                        num++;
+                                        parseObject.put("id", num);
+                                        parseObject.saveInBackground();
+                                        eventSubscription.put("id", parseObject.getInt("id"));
+                                        ((UserApplication) getApplication()).votedForEvent(parseObject.getInt("id"));
+                                    }
+                                }
+                            });
                             eventSubscription.saveInBackground();
                         } else {
                             parseObject.increment("votes");
@@ -100,6 +123,8 @@ public class PickMovies extends Activity
                         }
                     }
                 });
+                Toast.makeText(getApplicationContext(), "Added \""+moviesList.get(pos)._title+"\" to Event Voting Pool", Toast.LENGTH_SHORT).show();
+
 
                 toggleContents(view);
             }

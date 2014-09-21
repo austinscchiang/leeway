@@ -3,15 +3,14 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="80dp"
-    android:layout_marginBottom="5dp">
+    android:layout_height="80dp">
     <ImageView
         android:id="@+id/movie_thumbnail"
         android:layout_alignParentLeft="true"
-        android:layout_height="fill_parent"
+        android:layout_height="80dp"
         android:layout_width="50dp"
         android:layout_marginRight="10dp"
-        android:scaleType="fitXY"
+        android:scaleType="centerCrop"
         />
     <TextView
         android:id="@+id/movie_title"
@@ -42,7 +41,6 @@
         android:layout_toRightOf="@+id/movie_thumbnail"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingTop="5dp"
         android:gravity="left"
         android:textSize="14sp"
         android:text="Jay and 4 other friends want to see this"
