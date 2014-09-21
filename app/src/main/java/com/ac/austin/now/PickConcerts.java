@@ -8,7 +8,10 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import com.parse.GetCallback;
+import com.parse.ParseException;
 import com.parse.ParseObject;
+import com.parse.ParseQuery;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -67,13 +70,31 @@ public class PickConcerts extends Activity{
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id)
             {
-                ParseObject eventSubscription = new ParseObject("UserEvents3");
-                eventSubscription.put("eventType", "concert");
-                eventSubscription.put("name", concertsList.get(position)._name);
-                eventSubscription.put("primary", concertsList.get(position)._time);
-                eventSubscription.put("secondary", concertsList.get(position)._place);
-                eventSubscription.put("imageUrl", concertsList.get(position)._iconUrl);
-                eventSubscription.saveInBackground();
+                ParseQuery<ParseObject> query = ParseQuery.getQuery("UserEvent4");
+                query.whereEqualTo("eventType", "concert");
+                query.whereEqualTo("name", concertsList.get(position)._name);
+                query.whereEqualTo("primary", concertsList.get(position)._time);
+                query.whereEqualTo("secondary", concertsList.get(position)._place);
+                final int pos = position;
+                query.getFirstInBackground(new GetCallback<ParseObject>() {
+                    @Override
+                    public void done(ParseObject parseObject, ParseException e) {
+                        // Move this to when the user selects participate button (after toggle)
+                        if (parseObject == null) {
+                            ParseObject eventSubscription = new ParseObject("UserEvents4");
+                            eventSubscription.put("eventType", "concert");
+                            eventSubscription.put("name", concertsList.get(pos)._name);
+                            eventSubscription.put("primary", concertsList.get(pos)._time);
+                            eventSubscription.put("secondary", concertsList.get(pos)._place);
+                            eventSubscription.put("imageUrl", concertsList.get(pos)._iconUrl);
+                            eventSubscription.put("votes", 0);
+                            eventSubscription.saveInBackground();
+                        } else {
+                            parseObject.increment("votes");
+                            parseObject.saveInBackground();
+                        }
+                    }
+                });
             }
         });
 

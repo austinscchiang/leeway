@@ -24,7 +24,10 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import com.parse.GetCallback;
+import com.parse.ParseException;
 import com.parse.ParseObject;
+import com.parse.ParseQuery;
 
 /**
  * Created by austinchiang on 2014-09-20.
@@ -60,24 +63,36 @@ public class PickHackathons extends Activity
         }
     }
 
-    private void refreshHackathonsList()
-    {
+    private void refreshHackathonsList() {
         adapter = new HackathonListAdapter(this, R.layout.hackathon_list_item_layout, hackathonsList);
         hackathonssListView.setAdapter(adapter);
         hackathonssListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view,
-                    int position, long id)
-            {
-                ParseObject eventSubscription = new ParseObject("UserEvents3");
-                eventSubscription.put("eventType", "hackathon");
-                eventSubscription.put("name", hackathonsList.get(position)._name);
-                eventSubscription.put("secondary", hackathonsList.get(position)._time);
-                eventSubscription.put("primary", hackathonsList.get(position)._place);
-                eventSubscription.put("imageUrl", hackathonsList.get(position)._iconUrl);
-                eventSubscription.saveInBackground();
+                                    int position, long id) {
+                ParseQuery<ParseObject> query = ParseQuery.getQuery("UserEvent4");
+                query.whereEqualTo("eventType", "hackathon");
+                query.whereEqualTo("name", hackathonsList.get(position)._name);
+                final int pos = position;
+                query.getFirstInBackground(new GetCallback<ParseObject>() {
+                    @Override
+                    public void done(ParseObject parseObject, ParseException e) {
+                        // Move this to when the user selects participate button (after toggle)
+                        if (parseObject == null) {
+                            ParseObject eventSubscription = new ParseObject("UserEvents4");
+                            eventSubscription.put("eventType", "hackathon");
+                            eventSubscription.put("name", hackathonsList.get(pos)._name);
+                            eventSubscription.put("secondary", hackathonsList.get(pos)._time);
+                            eventSubscription.put("primary", hackathonsList.get(pos)._place);
+                            eventSubscription.put("imageUrl", hackathonsList.get(pos)._iconUrl);
+                            eventSubscription.saveInBackground();
+                        } else {
+                            parseObject.increment("votes");
+                            parseObject.saveInBackground();
+                        }
+                    }
+                });
             }
         });
-
     }
 
     private class RequestTask extends AsyncTask<String, String, String>
