@@ -75,7 +75,7 @@ public class PickMovies extends Activity
             public void onItemClick(AdapterView<?> parent, View view,
                     int position, long id)
             {
-                ParseQuery<ParseObject> query = ParseQuery.getQuery("UserEvent4");
+                ParseQuery<ParseObject> query = ParseQuery.getQuery("UserEvents4");
                 query.whereEqualTo("eventType", "movie");
                 query.whereEqualTo("id", moviesList.get(position)._id);
                 final int pos = position;

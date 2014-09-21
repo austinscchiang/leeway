@@ -68,7 +68,7 @@ public class PickDinners extends Activity {
         dinnersListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
-                ParseQuery<ParseObject> query = ParseQuery.getQuery("UserEvent4");
+                ParseQuery<ParseObject> query = ParseQuery.getQuery("UserEvents4");
                 query.whereEqualTo("eventType", "dinner");
                 query.whereEqualTo("id", dinnersList.get(position)._id);
                 final int pos = position;

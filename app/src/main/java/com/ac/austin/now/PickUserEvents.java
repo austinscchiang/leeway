@@ -95,7 +95,7 @@ public class PickUserEvents extends Activity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_events);
 
-        Parse.initialize(this, "cXbkz9olUPkokRVGGrES8bCUiNGoyCMS6F7FrKfD", "VaAJmOuV2t91IeYJOx2WERrGSUbkpvRcCiK66d8q");
+        Parse.initialize(this, "hE92ChGDrAIrjxk3CplatSnd6lH6HISCsWQLD48l", "xXchuLxJIkjqcEQuWRyZhNDEsJNXU5pb6gMkwBZz");
 
         eventsListView = (ListView) findViewById(R.id.list_events);
 
@@ -105,13 +105,13 @@ public class PickUserEvents extends Activity
     @Override
     public void onResume()
     {
-        super.onResume();ParseQuery<ParseObject> query = ParseQuery.getQuery("UserEvents3");
+        super.onResume();ParseQuery<ParseObject> query = ParseQuery.getQuery("UserEvents4");
         //query.whereContainedIn("userId", Arrays.asList(friendList));
         //query.setLimit(1);
         query.findInBackground(new FindCallback<ParseObject>() {
             @Override
             public void done(List<ParseObject> parseObjects, ParseException e) {
-                //ParseObject.deleteAllInBackground(parseObjects, null);
+//                ParseObject.deleteAllInBackground(parseObjects, null);
                 if (e == null) {
                     eventsList.clear();
                     for (ParseObject data : parseObjects) {

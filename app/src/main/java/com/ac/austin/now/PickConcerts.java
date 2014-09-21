@@ -70,7 +70,7 @@ public class PickConcerts extends Activity{
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id)
             {
-                ParseQuery<ParseObject> query = ParseQuery.getQuery("UserEvent4");
+                ParseQuery<ParseObject> query = ParseQuery.getQuery("UserEvents4");
                 query.whereEqualTo("eventType", "concert");
                 query.whereEqualTo("name", concertsList.get(position)._name);
                 query.whereEqualTo("primary", concertsList.get(position)._time);
