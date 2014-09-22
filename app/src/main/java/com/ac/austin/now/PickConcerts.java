@@ -1,5 +1,21 @@
 package com.ac.austin.now;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.zip.GZIPInputStream;
+
+import org.apache.http.HttpResponse;
+import org.apache.http.HttpStatus;
+import org.apache.http.StatusLine;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.app.Activity;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -14,28 +30,11 @@ import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 
-import org.apache.http.HttpResponse;
-import org.apache.http.HttpStatus;
-import org.apache.http.StatusLine;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.zip.GZIPInputStream;
-
 /**
  * Created by austinchiang on 2014-09-20.
  */
-public class PickConcerts extends Activity{
-    // the Rotten Tomatoes API key of your application! get this from their website
-    private static final String API_KEY = "vxwjzfe4gaczt2qpurr33cyj";
+public class PickConcerts extends Activity
+{
 
     private ListView concertsListView;
     private ArrayList<Concert> concertsList = new ArrayList();
@@ -50,7 +49,7 @@ public class PickConcerts extends Activity{
 
         concertsListView = (ListView) findViewById(R.id.list_concerts);
 
-        new RequestTask().execute("https://www.kimonolabs.com/api/cc5sjff4?apikey=2f216d8197b225ceca71483475e467f9");
+        new RequestTask().execute("api_url_here");
 
     }
 
@@ -69,7 +68,7 @@ public class PickConcerts extends Activity{
         concertsListView.setAdapter(adapter);
         concertsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view,
-                                    int position, long id)
+                    int position, long id)
             {
                 ParseQuery<ParseObject> query = ParseQuery.getQuery(getString(R.string.parse_object));
                 final ParseQuery<ParseObject> eventId = ParseQuery.getQuery(getString(R.string.latest_id));
@@ -80,7 +79,8 @@ public class PickConcerts extends Activity{
                 final int pos = position;
                 query.getFirstInBackground(new GetCallback<ParseObject>() {
                     @Override
-                    public void done(ParseObject parseObject, ParseException e) {
+                    public void done(ParseObject parseObject, ParseException e)
+                    {
                         // Move this to when the user selects participate button (after toggle)
                         if (parseObject == null) {
                             final ParseObject eventSubscription = new ParseObject(getString(R.string.parse_object));
@@ -114,14 +114,15 @@ public class PickConcerts extends Activity{
                                     }
                                 }
                             });
-                        } else {
+                        }
+                        else {
                             parseObject.increment("votes");
                             parseObject.saveInBackground();
                         }
                     }
                 });
 
-                Toast.makeText(getApplicationContext(), "Added \""+concertsList.get(pos)._name+"\"to Event Voting Pool", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "Added \"" + concertsList.get(pos)._name + "\"to Event Voting Pool", Toast.LENGTH_SHORT).show();
 
             }
         });

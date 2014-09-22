@@ -80,7 +80,7 @@ public class PickUserEvents extends Activity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_events);
-        Parse.initialize(this, "ZeUV6QK4coSIVkUSi71m96vIbANaQeNEbvtj3klI", "90HC87BRscSq8YT9ZjVahVtVIyncYuRN382QKTaW");
+        Parse.initialize(this, "Parse cred", "Parse Cred");
 
         eventsListView = (ListView) findViewById(R.id.list_events);
 

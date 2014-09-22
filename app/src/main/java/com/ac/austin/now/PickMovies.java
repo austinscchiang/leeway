@@ -36,7 +36,7 @@ import com.parse.ParseQuery;
 public class PickMovies extends Activity
 {
     // the Rotten Tomatoes API key of your application! get this from their website
-    private static final String API_KEY = "vxwjzfe4gaczt2qpurr33cyj";
+    private static final String API_KEY = "Key";
 
     private ListView moviesListView;
     private ArrayList<Movie> moviesList = new ArrayList();
@@ -51,7 +51,7 @@ public class PickMovies extends Activity
 
         moviesListView = (ListView) findViewById(R.id.list_movies);
 
-        new RequestTask().execute("http://api.rottentomatoes.com/api/public/v1.0/lists/movies/in_theaters.json?page_limit=15&page=1&country=us&apikey=vxwjzfe4gaczt2qpurr33cyj");
+        new RequestTask().execute("http://api.rottentomatoes.com/api/public/v1.0/lists/movies/in_theaters.json?page_limit=15&page=1&country=us&apikey=key");
 
     }
 

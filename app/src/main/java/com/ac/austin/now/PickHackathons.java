@@ -36,8 +36,6 @@ import com.parse.ParseQuery;
  */
 public class PickHackathons extends Activity
 {
-    // the Rotten Tomatoes API key of your application! get this from their website
-    private static final String API_KEY = "vxwjzfe4gaczt2qpurr33cyj";
 
     private ListView hackathonssListView;
     private ArrayList<Hackathon> hackathonsList = new ArrayList();
@@ -52,7 +50,7 @@ public class PickHackathons extends Activity
 
         hackathonssListView = (ListView) findViewById(R.id.list_hackathons);
 
-        new RequestTask().execute("https://www.kimonolabs.com/api/46vt6zfe?apikey=2f216d8197b225ceca71483475e467f9");
+        new RequestTask().execute("api_url_here");
 
     }
 

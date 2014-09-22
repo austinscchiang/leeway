@@ -28,7 +28,7 @@ import com.parse.ParseQuery;
  */
 public class PickDinners extends Activity
 {
-    YelpAPI _yelpApi = new YelpAPI("LqeDHctSMkc3KeV7qy8gLQ", "HhUV2dwiW35MDk68twXP62tUdXk", "p-2jK2LGuo0ItJPCiKCHRYagRCei2gen", "2BOEeKWpyBHSlvS8Jm00Quh-FTE");
+    YelpAPI _yelpApi = new YelpAPI("Oauth cred", "Oauth cred", "Oauth cred", "Oauth cred");
 
     private ListView dinnersListView;
     private ArrayList<Dinner> dinnersList = new ArrayList();
