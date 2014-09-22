@@ -10,4 +10,4 @@ Written for android, backend with parse, scraping with kimono.
 
 
 Landing Screen:
-![alt tag](https://raw.githubusercontent.com/austinscchiang/leeway/master/images/Screenshot_2014-09-21-04-50-24.png)
+![alt tag](https://raw.githubusercontent.com/austinscchiang/leeway/master/images/landing.png)
